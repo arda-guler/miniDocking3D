@@ -278,9 +278,15 @@ def main():
                 break
             else:
                 print("FAIL - TOO FAST!")
-                print(read_high_score())
+                print("Previous high score: " + read_high_score())
                 playSfx("alert", 2)
                 break
+            
+        elif abs(ship_trans[2] - 0) <= -1 and not (abs(ship_trans[0] - 0) <= pos_lateral_tolerance and abs(ship_trans[1] - 0) <= pos_lateral_tolerance):
+            print("FAIL - MISSED TARGET!")
+            print("Previous high score: " + read_high_score())
+            playSfx("alert", 2)
+            break
 
         pygame.display.flip()
         pygame.time.wait(10)
