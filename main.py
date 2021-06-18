@@ -9,7 +9,7 @@ from os import path, system
 from sound import *
 from interface import *
 
-ship = pywavefront.Wavefront('data/models/station_new.obj', collect_faces=True)
+ship = pywavefront.Wavefront('data/models/ministation.obj', collect_faces=True)
 
 ship_scale = [1,1,1]
 ship_trans = [random.randint(-15,15),random.randint(-15,15),random.randint(-200, -50)]
