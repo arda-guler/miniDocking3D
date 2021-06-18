@@ -76,6 +76,9 @@ def main():
     pygame.init()
     display = (800, 600)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
+    pygame.display.set_caption("MiniDocking3D")
+    clampIcon = pygame.image.load("data/images/clamp_transparent.png")
+    pygame.display.set_icon(clampIcon)
     gluPerspective(45, (display[0] / display[1]), 0.05, 500.0)
     glEnable(GL_CULL_FACE)
 
