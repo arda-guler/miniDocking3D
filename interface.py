@@ -249,7 +249,6 @@ def Crosshair(ship_trans, pos_lateral_tolerance):
 
 # alerts
 def SpeedAlert(time_to_alert, max_speed, ship_speed, dist):
-    print(ship_speed, max_speed * 100)
     if ship_speed > max_speed * 100 and dist/ship_speed < time_to_alert and not getChannelBusy(2):
         playSfx("alert_speed", channel=2)
 
