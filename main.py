@@ -200,42 +200,42 @@ def main():
             vel[1] -= 0.001 + random.uniform(0.0002, -0.0002)
             UpArrow(vel[1], vel_lateral_tolerance)
             frame_up_cmd = False
-            playSfx("rcs_burst")
+            playSfx("rcs_burst", channel=1)
             total_commands += 1
 
         if frame_down_cmd:
             vel[1] += 0.001 + random.uniform(0.0002, -0.0002)
             DownArrow(vel[1], vel_lateral_tolerance)
             frame_down_cmd = False
-            playSfx("rcs_burst")
+            playSfx("rcs_burst", channel=1)
             total_commands += 1
 
         if frame_right_cmd:
             vel[0] -= 0.001 + random.uniform(0.0002, -0.0002)
             RightArrow(vel[0], vel_lateral_tolerance)
             frame_right_cmd = False
-            playSfx("rcs_burst")
+            playSfx("rcs_burst", channel=1)
             total_commands += 1
 
         if frame_left_cmd:
             vel[0] += 0.001 + random.uniform(0.0002, -0.0002)
             LeftArrow(vel[0], vel_lateral_tolerance)
             frame_left_cmd = False
-            playSfx("rcs_burst")
+            playSfx("rcs_burst", channel=1)
             total_commands += 1
 
         if frame_fwd_cmd:
             vel[2] += 0.001 + random.uniform(0.0002, -0.0002)
             ForwardArrow(vel[2], vel_direct_tolerance)
             frame_fwd_cmd = False
-            playSfx("rcs_burst")
+            playSfx("rcs_burst", channel=1)
             total_commands += 1
 
         if frame_bkd_cmd:
             vel[2] -= 0.001 + random.uniform(0.0002, -0.0002)
             BackwardArrow(vel[2], vel_direct_tolerance)
             frame_bkd_cmd = False
-            playSfx("rcs_burst")
+            playSfx("rcs_burst", channel=1)
             total_commands += 1
 
         if draw_crosshair:
@@ -247,12 +247,15 @@ def main():
                 beep_sleep = 4.0
 
             if beep_iterator >= beep_sleep:
-                playSfx("radar_beep")
+                playSfx("radar_beep", channel=4)
                 beep_iterator = 0
             else:
                 beep_iterator += 1
         else:
             beep_iterator = beep_sleep
+
+        SpeedAlert(5.0, vel_direct_tolerance, vel[2]*100, -ship_trans[2])
+        TargetAlert(5.0, ship_trans[0], ship_trans[1], vel[0], vel[1], pos_lateral_tolerance, vel[2]*100, -ship_trans[2])
             
         # docking position
         if abs(ship_trans[0] - 0) <= pos_lateral_tolerance and abs(ship_trans[1] - 0) <= pos_lateral_tolerance and abs(ship_trans[2] - 0) <= 1:
@@ -268,7 +271,7 @@ def main():
                     print("Score: %.1f" % score)
                 else:
                     print("Autodock scored %.1f" % score)
-                playSfx("dock")
+                playSfx("dock", channel=3)
                 print("Previous high score: " + read_high_score())
                 if not autodock:
                     if not read_high_score() == "High score file not found.":
@@ -282,13 +285,13 @@ def main():
             else:
                 print("FAIL - TOO FAST!")
                 print("Previous high score: " + read_high_score())
-                playSfx("alert", 2)
+                playSfx("alert", 3, channel=3)
                 break
             
-        elif abs(ship_trans[2] - 0) <= -1 and not (abs(ship_trans[0] - 0) <= pos_lateral_tolerance and abs(ship_trans[1] - 0) <= pos_lateral_tolerance):
+        elif abs(ship_trans[2] - 0) <= 1 and not (abs(ship_trans[0] - 0) <= pos_lateral_tolerance and abs(ship_trans[1] - 0) <= pos_lateral_tolerance):
             print("FAIL - MISSED TARGET!")
             print("Previous high score: " + read_high_score())
-            playSfx("alert", 2)
+            playSfx("alert", 3, channel=3)
             break
 
         pygame.display.flip()
