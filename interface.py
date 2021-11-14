@@ -249,13 +249,16 @@ def Crosshair(ship_trans, pos_lateral_tolerance):
 
 # alerts
 def SpeedAlert(time_to_alert, max_speed, ship_speed, dist):
-    if ship_speed > max_speed * 100 and dist/ship_speed < time_to_alert and not getChannelBusy(2):
-        playSfx("alert_speed", channel=2)
+    if not ship_speed == 0:
+        if ship_speed > max_speed * 100 and dist/ship_speed < time_to_alert and not getChannelBusy(2):
+            playSfx("alert_speed", channel=2)
 
 def TargetAlert(time_to_alert, pos_x, pos_y, vel_x, vel_y, lateral_tolerance, ship_speed, dist):
-    if (dist/ship_speed < time_to_alert and not getChannelBusy(5) and ship_speed > 0 and
-        ((abs(pos_x) > lateral_tolerance or abs(pos_y) > lateral_tolerance) or
-        vel_x * (dist/ship_speed) + pos_x > lateral_tolerance * 2 or vel_x * (dist/ship_speed) + pos_x < -lateral_tolerance * 2 or
-        vel_y * (dist/ship_speed) + pos_y > lateral_tolerance * 2 or vel_y * (dist/ship_speed) + pos_y < -lateral_tolerance * 2)):
-        
-        playSfx("alert_target", channel=5)
+    if not ship_speed == 0:
+        if (dist/ship_speed < time_to_alert and not getChannelBusy(5) and ship_speed > 0 and
+            ((abs(pos_x) > lateral_tolerance or abs(pos_y) > lateral_tolerance) or
+            vel_x * (dist/ship_speed) + pos_x > lateral_tolerance * 2 or vel_x * (dist/ship_speed) + pos_x < -lateral_tolerance * 2 or
+            vel_y * (dist/ship_speed) + pos_y > lateral_tolerance * 2 or vel_y * (dist/ship_speed) + pos_y < -lateral_tolerance * 2)):
+            
+            playSfx("alert_target", channel=5)
+

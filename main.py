@@ -134,36 +134,73 @@ def main():
 
         if autodock:
            
+            tta = -ship_trans[2] / vel[2]
+            far_tolerance_multiplier = max(1, abs(ship_trans[2])/25)
+
             # x axis
-            if abs(ship_trans[0]) <= pos_lateral_tolerance * 0.3:
-                if vel[0] >= vel_lateral_tolerance * 0.6:
+            # behind 20 m
+            if ship_trans[2] < -20.0 and vel[2] > 0 and tta < 10000:
+                if -pos_lateral_tolerance * 0.7 < ship_trans[0] < pos_lateral_tolerance * 0.7:
+                    if vel[0] > 0.01:
+                        frame_right_cmd = True
+                    elif vel[0] < -0.01:
+                        frame_left_cmd = True
+                elif pos_lateral_tolerance * 0.7 < ship_trans[0] < pos_lateral_tolerance:
+                    if vel[0] > 0:
+                        frame_right_cmd = True
+                elif -pos_lateral_tolerance * 0.7 > ship_trans[0] > -pos_lateral_tolerance:
+                    if vel[0] < 0:
+                        frame_left_cmd = True
+                elif ship_trans[0] + vel[0] * (tta - 1500) > pos_lateral_tolerance * far_tolerance_multiplier and not vel[0] < -0.01:
                     frame_right_cmd = True
-                elif vel[0] <= -vel_lateral_tolerance * 0.6:
+                elif ship_trans[0] + vel[0] * (tta - 1500) < -pos_lateral_tolerance  * far_tolerance_multiplier and not vel[0] > 0.01:
                     frame_left_cmd = True
-            elif ship_trans[0] < 0:
-                if vel[0] < vel_lateral_tolerance * 3:
-                    frame_left_cmd = True
-            elif ship_trans[0] > 0:
-                if vel[0] > -vel_lateral_tolerance * 3:
+
+            # closer than 20 m
+            elif ship_trans[2] >= -20.0:
+                if ship_trans[0] > pos_lateral_tolerance * 0.4 and vel[0] > -vel_lateral_tolerance * 0.8:
                     frame_right_cmd = True
+                elif ship_trans[0] < -pos_lateral_tolerance * 0.4 and vel[0] < vel_lateral_tolerance * 0.8:
+                    frame_left_cmd = True
+                elif -pos_lateral_tolerance * 0.4 < ship_trans[0] < pos_lateral_tolerance * 0.4 and vel[0] > vel_lateral_tolerance * 0.15:
+                    frame_right_cmd = True
+                elif -pos_lateral_tolerance * 0.4 < ship_trans[0] < pos_lateral_tolerance * 0.4 and vel[0] < -vel_lateral_tolerance * 0.15:
+                    frame_left_cmd = True
 
             # y axis
-            if abs(ship_trans[1]) <= pos_lateral_tolerance * 0.3:
-                if vel[1] >= vel_lateral_tolerance * 0.6:
+            # behind 20 m
+            if ship_trans[2] < -20.0 and vel[2] > 0 and tta < 10000:
+                if -pos_lateral_tolerance * 0.7 < ship_trans[1] < pos_lateral_tolerance * 0.7:
+                    if vel[1] > 0.01:
+                        frame_up_cmd = True
+                    elif vel[1] < -0.01:
+                        frame_down_cmd = True
+                elif pos_lateral_tolerance * 0.7 < ship_trans[1] < pos_lateral_tolerance:
+                    if vel[1] > 0:
+                        frame_up_cmd = True
+                elif -pos_lateral_tolerance * 0.7 > ship_trans[1] > -pos_lateral_tolerance:
+                    if vel[1] < 0:
+                        frame_down_cmd = True
+                elif ship_trans[1] + vel[1] * (tta - 1500) > pos_lateral_tolerance * far_tolerance_multiplier and not vel[1] < -0.01:
                     frame_up_cmd = True
-                elif vel[1] <= -vel_lateral_tolerance * 0.6:
+                elif ship_trans[1] + vel[1] * (tta - 1500) < -pos_lateral_tolerance * far_tolerance_multiplier and not vel[1] > 0.01:
                     frame_down_cmd = True
-            elif ship_trans[1] < 0:
-                if vel[1] < vel_lateral_tolerance * 3:
-                    frame_down_cmd = True
-            elif ship_trans[1] > 0:
-                if vel[1] > -vel_lateral_tolerance * 3:
+
+            # closer than 20 m
+            elif ship_trans[2] >= -20.0:
+                if ship_trans[1] > pos_lateral_tolerance * 0.4 and vel[1] > -vel_lateral_tolerance * 0.8:
                     frame_up_cmd = True
+                elif ship_trans[1] < -pos_lateral_tolerance * 0.4 and vel[1] < vel_lateral_tolerance * 0.8:
+                    frame_down_cmd = True
+                elif -pos_lateral_tolerance * 0.4 < ship_trans[1] < pos_lateral_tolerance * 0.4 and vel[1] > vel_lateral_tolerance * 0.15:
+                    frame_up_cmd = True
+                elif -pos_lateral_tolerance * 0.4 < ship_trans[1] < pos_lateral_tolerance * 0.4 and vel[1] < -vel_lateral_tolerance * 0.15:
+                    frame_down_cmd = True
 
             # z axis
             if ship_trans[2] >= -15.0:
                 # make sure the ship is aligned before proceeding further than 15 meters
-                if abs(ship_trans[0]) <= pos_lateral_tolerance * 0.9 and abs(ship_trans[1]) <= pos_lateral_tolerance * 0.9:
+                if abs(ship_trans[0]) <= pos_lateral_tolerance and abs(ship_trans[1]) <= pos_lateral_tolerance:
                     if vel[2] < vel_direct_tolerance * 0.75:
                         frame_fwd_cmd = True
                     elif vel[2] > vel_direct_tolerance * 0.9:
